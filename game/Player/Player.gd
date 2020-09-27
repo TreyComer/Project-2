@@ -19,6 +19,8 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_pressed("shoot"):
 		var bullet =  Bullet.instance()
+		bullet.rotation = rotation
+		bullet.speed = bullet.speed.rotated(rotation)
 		bullet.position = position
 		get_node("/root/Game/Bullets").add_child(bullet)
 

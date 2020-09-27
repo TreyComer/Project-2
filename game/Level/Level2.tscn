@@ -1,10 +1,13 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/BebasNeueRegular.otf" type="DynamicFontData" id=1]
-[ext_resource path="res://Enemy/Enemies2.gd" type="Script" id=2]
-[ext_resource path="res://Level/Level.gd" type="Script" id=3]
-[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=4]
-[ext_resource path="res://HUD/HUD.gd" type="Script" id=6]
+[ext_resource path="res://HUD/HUD.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Player.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Galaxy.jpg" type="Texture" id=4]
+[ext_resource path="res://Enemy/Enemies2.gd" type="Script" id=5]
+[ext_resource path="res://Player/Player.gd" type="Script" id=6]
+[ext_resource path="res://Enemy/Stationary enemy.gd" type="Script" id=7]
+[ext_resource path="res://Assets/Enemy.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 20
@@ -12,35 +15,35 @@ font_data = ExtResource( 1 )
 
 [node name="Game" type="Node2D"]
 
-[node name="Player_area" type="Node2D" parent="."]
+[node name="Player" type="KinematicBody2D" parent="."]
+position = Vector2( 512, 350 )
+scale = Vector2( 0.5, 0.5 )
+collision_layer = 16
+collision_mask = 4
+script = ExtResource( 6 )
 
-[node name="Player" parent="Player_area" instance=ExtResource( 4 )]
+[node name="Sprite" type="Sprite" parent="Player"]
+rotation = 3.14159
+texture = ExtResource( 3 )
 
-[node name="Enemies" type="Node2D" parent="."]
-script = ExtResource( 2 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Player"]
+rotation = 3.14159
+polygon = PoolVector2Array( 26, -40.4, 29.3, -33, 30.6, -33, 45, -24.1, 45, -18.4, 50, 7.5, 50, 38.2, 48.3, 41, 31, 41, 31, 39, 30.5, 37.2, 24, 38.4, 24, 35.6, 19, 27.6, 19, 21.6, 20, 19, 16.4, 19, 10.4, 37, -10, 37, -10, 35.2, -14, 33.2, -14, 29, -16.5, 19, -21, 19, -21, 20, -18.3, 29, -20.7, 29, -24.7, 38, -29.6, 38, -30.8, 41, -48.8, 41, -50, 39.8, -50, 37, -50, 11.2, -44.7, -25, -42.5, -25, -30, -32.1, -26, -40.5, -4, -41, -4, -40.4, -3.3, -37, 3, -37, 3, -41, 26, -41 )
 
-[node name="Timer" type="Timer" parent="Enemies"]
-autostart = true
+[node name="Bullets" type="Node2D" parent="."]
 
-[node name="Explosions" type="Node2D" parent="."]
+[node name="Explosion" type="Node2D" parent="."]
 
-[node name="Level" type="Area2D" parent="."]
-visible = false
-position = Vector2( 363, 505.5 )
-monitoring = false
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Level"]
-position = Vector2( 1.5, 1.8 )
-polygon = PoolVector2Array( 29.5, -40.8, 29.5, -39.4, 41.5, -28.4, 41.5, -26.1, 45.5, -20.1, 45.5, 19.2, 40.8, 29.5, 39.4, 29.5, 28.4, 41.5, 26.1, 41.5, 20.1, 45.5, -20.7, 45.5, -29.5, 40.7, -29.5, 39.4, -42.5, 27.4, -42.5, 25.1, -45.5, 20.3, -45.5, -19.5, -41.9, -28.5, -40.5, -28.5, -32.5, -38.5, -30, -38.5, -18.7, -45.5, 19.2, -45.5 )
+[node name="Background" type="Sprite" parent="."]
+show_behind_parent = true
+position = Vector2( 511.411, 300.489 )
+scale = Vector2( 3.71449, 3.3 )
+texture = ExtResource( 4 )
 
 [node name="HUD" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
-script = ExtResource( 6 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -67,7 +70,7 @@ __meta__ = {
 [node name="Score" type="Label" parent="HUD"]
 margin_left = 512.0
 margin_right = 1014.0
-margin_bottom = 43.0
+margin_bottom = 40.0
 custom_fonts/font = SubResource( 1 )
 text = "Score"
 align = 2
@@ -75,5 +78,47 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="timeout" from="Enemies/Timer" to="Enemies" method="_on_Timer_timeout"]
-[connection signal="body_entered" from="Level" to="Level" method="_on_Level_body_entered"]
+
+[node name="Enemy" type="Node2D" parent="."]
+script = ExtResource( 5 )
+
+[node name="Enemy 2" type="KinematicBody2D" parent="."]
+collision_layer = 1024
+collision_mask = 1024
+script = ExtResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="Enemy 2"]
+position = Vector2( 953.744, 548.224 )
+rotation = 2.0944
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Enemy 2"]
+visible = false
+position = Vector2( 953.744, 548.224 )
+rotation = 2.0944
+scale = Vector2( 0.5, 0.5 )
+polygon = PoolVector2Array( 34, -136.9, 34, -114, 31.8, -114, 26, -108.2, 26, -84.8, 19.4, -51.5, 26.4, -45.2, 41.2, -60, 86, -60, 86, 0, 41.1, 0, 26.1, -16, 24.9, -16, 19, -9.3, 19, -7.39999, 26, 10.6, 26, 19, 30, 24, 35.1, 24, 64, 28.3, 64, 31, 66.2, 54, 63.8, 54, 60.8, 57, 52.3, 57, 31, 59.8, 26, 64, 26, 73.3, 11, 115.4, 11, 117.1, 18, 123.1, 18, 138, 15.9, 138, 10.7, 144, -10.8, 144, -18, 136.8, -18, 123.3, -11.9, 115.5, -26, 73.3, -26, 65, -30, 60, -35.1, 60, -62, 56.8, -62, 55.2, -66, 53.2, -66, 30.3, -31, 24.3, -26, 20, -26, 10.7, -19.5, -8.7, -26.4, -14.8, -41.2, 0, -86, 0, -86, -60, -41.1, -60, -26.1, -44, -24.9, -44, -19, -50.7, -19, -55, -26, -84.8, -26, -107.2, -34, -115.2, -34, -138, -31.8, -138, -26, -143.8, 26, -144 )
+
+[node name="shoot" type="Timer" parent="Enemy 2"]
+
+[node name="Enemy 3" type="KinematicBody2D" parent="."]
+collision_layer = 1024
+collision_mask = 1024
+script = ExtResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="Enemy 3"]
+position = Vector2( 71.353, 546.811 )
+rotation = 4.18879
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Enemy 3"]
+visible = false
+position = Vector2( 71.353, 555 )
+rotation = -2.09439
+scale = Vector2( 0.5, 0.5 )
+polygon = PoolVector2Array( 34, -136.9, 34, -114, 31.8, -114, 26, -108.2, 26, -84.8, 19.4, -51.5, 26.4, -45.2, 41.2, -60, 86, -60, 86, 0, 41.1, 0, 26.1, -16, 24.9, -16, 19, -9.3, 19, -7.39999, 26, 10.6, 26, 19, 30, 24, 35.1, 24, 64, 28.3, 64, 31, 66.2, 54, 63.8, 54, 60.8, 57, 52.3, 57, 31, 59.8, 26, 64, 26, 73.3, 11, 115.4, 11, 117.1, 18, 123.1, 18, 138, 15.9, 138, 10.7, 144, -10.8, 144, -18, 136.8, -18, 123.3, -11.9, 115.5, -26, 73.3, -26, 65, -30, 60, -35.1, 60, -62, 56.8, -62, 55.2, -66, 53.2, -66, 30.3, -31, 24.3, -26, 20, -26, 10.7, -19.5, -8.7, -26.4, -14.8, -41.2, 0, -86, 0, -86, -60, -41.1, -60, -26.1, -44, -24.9, -44, -19, -50.7, -19, -55, -26, -84.8, -26, -107.2, -34, -115.2, -34, -138, -31.8, -138, -26, -143.8, 26, -144 )
+
+[node name="shoot" type="Timer" parent="Enemy 3"]
+[connection signal="timeout" from="Enemy 2/shoot" to="Enemy 2" method="_on_shoot_timeout"]
